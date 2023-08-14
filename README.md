@@ -1,5 +1,6 @@
 # NER_address_demo
 Address extraction demo based on NER and flask
+
 基于NER模型和flask框架的地址提取demo
 
 从Hugging Face下载模型文件到model文件夹内，修改app.py文件内的对应模型路径即可。
