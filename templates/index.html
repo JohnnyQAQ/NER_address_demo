@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>地址提取</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" href="{{ url_for('static', filename='favicon.ico') }}" type="image/x-icon">
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='style.css') }}">
+</head>
+<body>
+    <h1>地址提取</h1>
+    <form id="text-form">
+        <textarea id="text-input" rows="4" cols="50" placeholder="输入文本..."></textarea>
+        <p class="model-select-label">模型选择：</p>
+        <select id="model-select">
+            {% for model in models %}
+                <option value="{{ model }}">{{ model }}</option>
+            {% endfor %}
+        </select>
+        <br>
+        <input type="submit" value="提取">
+    </form>
+    <div id="result-container" class="result">
+        <h2>地址:</h2>
+        <p id="address"></p>
+    </div>
+    <br>
+    <button id="clear-button" onclick="clearAddress()">清除</button>
+
+
+    <script>
+        // Handle form submission
+        document.getElementById('text-form').addEventListener('submit', function (event) {
+            event.preventDefault(); // Prevent page reload
+
+            // Get the input text and selected model
+            var text = document.getElementById('text-input').value;
+            var model = document.getElementById('model-select').value;
+
+            // Send a POST request to the server
+            fetch('/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({text: text, model: model })
+            })
+            .then(function (response) {
+                return response.json();
+            })
+            .then(function (data) {
+                // Update the address on the page
+                document.getElementById('address').textContent = data.address;
+                document.getElementById('result-container').style.display = 'block'; // Show the result container
+            })
+            .catch(function (error) {
+                console.error('Error:', error);
+            });
+        });
+
+        function clearAddress() {
+            document.getElementById('text-input').value = ''; // Clear the textarea
+            document.getElementById('address').textContent = ''; // Clear the address text
+            document.getElementById('result-container').style.display = 'none'; // Hide the result container
+        }
+    </script>
+</body>
+</html>
